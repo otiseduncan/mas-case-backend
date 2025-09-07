@@ -14,11 +14,12 @@ RUN npm install --ignore-scripts
 # Copy the rest of the source code
 COPY . .
 
-# Build TypeScript after src/ is present
-RUN npm run build
 
-# Generate Prisma client
+# Generate Prisma client before build
 RUN npx prisma generate
+
+# Build TypeScript after Prisma client exists
+RUN npm run build
 
 # Run migrations + start server
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]
