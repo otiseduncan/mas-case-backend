@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm exec tsc -p tsconfig.json && npx prisma generate
+RUN chmod +x node_modules/.bin/tsc && npm run build && npx prisma generate
 
 EXPOSE 3000
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]
