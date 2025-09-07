@@ -1,0 +1,29 @@
+openapi: 3.0.3
+info:
+  title: MAS Case by Case API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Tokens
+  /cases:
+    get:
+      summary: List cases
+      responses: { '200': { description: OK } }
+    post:
+      summary: Create case
+      responses: { '201': { description: Created } }

@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  manager
+  tech
+}
+
+enum CaseStatus {
+  new
+  in_progress
+  waiting_on_parts
+  waiting_on_shop
+  resolved
+  closed
+  cancelled
+}
+
+enum Priority {
+  low
+  medium
+  high
+  urgent
+}
+
+model Organization {
+  id        String  @id @default(cuid())
+  name      String  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[]
+  shops Shop[]
+  cases Case[]
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(tech)
+  name          String?
+  orgId         String
+  org           Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  casesCreated  Case[]   @relation("CasesCreated")
+  casesAssigned Case[]   @relation("CasesAssigned")
+  notes         CaseNote[]
+  attachments   CaseAttachment[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+}
+
+model Shop {
+  id        String  @id @default(cuid())
+  orgId     String
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name      String
+  address   String?
+  city      String?
+  state     String?
+  zip       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cases Case[]
+
+  @@unique([orgId, name])
+}
+
+model Case {
+  id           String   @id @default(cuid())
+  orgId        String
+  org          Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  roNumber     String
+  vin          String
+  issueType    String?
+  status       CaseStatus @default(new)
+  priority     Priority   @default(medium)
+  summary      String?
+  notes        String?
+  shopId       String?
+  shop         Shop?      @relation(fields: [shopId], references: [id], onDelete: SetNull)
+  createdById  String
+  createdBy    User       @relation("CasesCreated", fields: [createdById], references: [id], onDelete: SetNull)
+  assignedToId String?
+  assignedTo   User?      @relation("CasesAssigned", fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  caseNotes       CaseNote[]
+  caseAttachments CaseAttachment[]
+
+  @@unique([orgId, roNumber, vin])
+  @@index([orgId, status])
+  @@index([vin])
+  @@index([roNumber])
+}
+
+model CaseNote {
+  id        String   @id @default(cuid())
+  caseId    String
+  case      Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model CaseAttachment {
+  id         String   @id @default(cuid())
+  caseId     String
+  case       Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  uploadedById String
+  uploadedBy User     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  filePath   String
+  mimeType   String?
+  size       Int?
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String
+  entityId   String?
+  meta       Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String   // sha256 of the refresh token value
+  isRevoked  Boolean  @default(false)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([userId, isRevoked])
+}

@@ -1,0 +1,122 @@
+{
+  "info": {
+    "name": "MAS Case Backend",
+    "_postman_id": "mas-case-backend-collection",
+    "description": "Postman collection for MAS Case by Case backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@masdemo.com\",\n  \"password\": \"Admin!234\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "Auth - Refresh",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "x-user-id", "value": "{{userId}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/refresh",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "refresh"]
+        }
+      }
+    },
+    {
+      "name": "Cases - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cases",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cases"]
+        }
+      }
+    },
+    {
+      "name": "Cases - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"roNumber\": \"RO99999\",\n  \"vin\": \"1HGCM82633A000000\",\n  \"issueType\": \"Calibration\",\n  \"priority\": \"high\",\n  \"summary\": \"Test case from Postman\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cases",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cases"]
+        }
+      }
+    },
+    {
+      "name": "Notes - Add Note",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"body\": \"Technician note from Postman\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cases/{{caseId}}/notes",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cases", "{{caseId}}", "notes"]
+        }
+      }
+    },
+    {
+      "name": "Users - List (Admin Only)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "users"]
+        }
+      }
+    }
+  ]
+}
