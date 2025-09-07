@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
-function parseDemoUsers(): {email: string, password: string, role: Role, org: string}[] {
+function parseDemoUsers(): { email: string; password: string; role: string; org: string }[] {
   try {
     const raw = process.env.DEMO_USERS_JSON
     if (!raw || raw.trim() === '' || raw.trim() === '[]') {
@@ -13,8 +13,7 @@ function parseDemoUsers(): {email: string, password: string, role: Role, org: st
         { email: 'technician@mas.demo', password: 'tech123', role: 'tech' as Role,    org: 'MAS' },
       ]
     }
-    const arr = JSON.parse(raw)
-    return arr
+  return JSON.parse(raw)
   } catch (e) {
     console.error('Failed to parse DEMO_USERS_JSON; falling back to defaults', e)
     return [
@@ -57,11 +56,11 @@ async function main() {
     const passwordHash = await bcrypt.hash(u.password, 10)
     await prisma.user.upsert({
       where: { email: u.email },
-      update: { orgId: org.id, role: u.role },
+      update: { orgId: org.id, role: u.role as Role },
       create: {
         email: u.email,
         passwordHash,
-        role: u.role,
+        role: u.role as Role,
         orgId: org.id,
       }
     })
