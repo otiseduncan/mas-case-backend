@@ -21,5 +21,5 @@ RUN npx prisma generate
 # Compile TypeScript
 RUN npm run build
 
-# Run migrations (best effort) and then always start server
-CMD ["sh", "-c", "npx prisma migrate deploy ; node dist/server.js"]
+# Start server only
+CMD ["node", "dist/server.js"]
