@@ -2,19 +2,17 @@ FROM node:20-bookworm-slim
 
 WORKDIR /app
 
-# Copy package files and tsconfig first
-COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* tsconfig.json ./
+# Copy everything up front (including tsconfig.json and src/)
+COPY . .
 
-# Install dependencies (this will run postinstall automatically)
+# Install dependencies (this will also run postinstall if defined)
 RUN npm install
 
-# Copy the rest of the code
-COPY . .
+# Build explicitly (in case postinstall was skipped in some environments)
+RUN npm run build
 
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build explicitly (in case postinstall was skipped)
-RUN npm run build
-
+# Run migrations and start server
 CMD npx prisma migrate deploy && node dist/server.js
