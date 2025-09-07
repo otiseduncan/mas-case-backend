@@ -18,8 +18,8 @@ services:
       timeout: 5s
       retries: 10
 
-  api:
-    build: .
+volumes:
+  db_data:
     container_name: mas_case_api
     env_file: .env
     depends_on:
