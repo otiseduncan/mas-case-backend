@@ -3,23 +3,23 @@ FROM node:20-bookworm-slim
 
 WORKDIR /app
 
-# Install OpenSSL (required by Prisma)
+# Install OpenSSL (required for Prisma)
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-# Copy package files and tsconfig.json first
+# Copy package files and tsconfig.json
 COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* tsconfig.json ./
 
-# Install dependencies but skip postinstall to avoid premature builds
+# Install dependencies (skip postinstall to avoid premature build)
 RUN npm install --ignore-scripts
 
-# Copy the rest of the source code
+# Copy source code
 COPY . .
 
-# Generate Prisma client BEFORE TypeScript build
+# Always generate Prisma client before build
 RUN npx prisma generate
 
-# Compile TypeScript → dist/
+# Compile TypeScript
 RUN npm run build
 
-# Run migrations and then start the Fastify server
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]
+# Run migrations (best effort) and then always start server
+CMD ["sh", "-c", "npx prisma migrate deploy ; node dist/server.js"]
