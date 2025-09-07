@@ -1,4 +1,8 @@
 import fp from 'fastify-plugin'
+import { env } from '../config/env.js'
+import { prisma } from '../config/prisma.js'
+import { signAccessToken, verifyRefreshToken, issueRefreshToken, rotateRefreshToken } from '../utils/token.js'
+import { comparePassword, hashPassword } from '../utils/password.js'
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 
 declare module 'fastify' {

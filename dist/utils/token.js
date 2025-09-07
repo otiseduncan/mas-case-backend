@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { prisma } from '../config/prisma';
-import { env } from '../config/env';
+import { prisma } from '../config/prisma.js';
+import { env } from '../config/env.js';
 export function signAccessToken(fastify, payload) {
     return fastify.jwt.sign(payload, { expiresIn: env.ACCESS_TOKEN_TTL });
 }

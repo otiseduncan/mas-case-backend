@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../config/prisma'
+import { prisma } from '../../config/prisma.js'
+import { comparePassword, hashPassword } from '../../utils/password.js'
 
 export async function userRoutes(fastify: FastifyInstance) {
   fastify.get('/users', { preHandler: fastify.requireRole(['admin']) }, async (req, reply) => {

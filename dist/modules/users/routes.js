@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { prisma } from '../../config/prisma';
+import { prisma } from '../../config/prisma.js';
 export async function userRoutes(fastify) {
     fastify.get('/users', { preHandler: fastify.requireRole(['admin']) }, async (req, reply) => {
         const user = req.authUser;

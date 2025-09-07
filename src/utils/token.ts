@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import crypto from 'crypto'
-import { prisma } from '../config/prisma'
-import { env } from '../config/env'
+import { prisma } from '../config/prisma.js'
+import { env } from '../config/env.js'
 
 export function signAccessToken(fastify: FastifyInstance, payload: { sub: string; orgId: string; role: string; email: string }) {
   return fastify.jwt.sign(payload, { expiresIn: env.ACCESS_TOKEN_TTL })

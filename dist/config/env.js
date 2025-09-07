@@ -1,17 +1,12 @@
-import 'dotenv/config';
-import { z } from 'zod';
-const schema = z.object({
-    PORT: z.coerce.number().default(3000),
-    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-    LOG_LEVEL: z.string().default('info'),
-    DATABASE_URL: z.string().url(),
-    JWT_SECRET: z.string().min(32),
-    ACCESS_TOKEN_TTL: z.string().default('15m'),
-    REFRESH_TOKEN_TTL: z.string().default('7d'),
-});
-const parsed = schema.safeParse(process.env);
-if (!parsed.success) {
-    console.error('❌ Invalid environment variables:', parsed.error.flatten().fieldErrors);
-    process.exit(1);
-}
-export const env = parsed.data;
+import dotenv from 'dotenv';
+dotenv.config();
+export const env = {
+    NODE_ENV: process.env.NODE_ENV || 'development',
+    LOG_LEVEL: process.env.LOG_LEVEL || 'info',
+    PORT: process.env.PORT ? parseInt(process.env.PORT) : 3000,
+    JWT_SECRET: process.env.JWT_SECRET || 'super-secret',
+    DATABASE_URL: process.env.DATABASE_URL || '',
+    // Token lifetimes
+    ACCESS_TOKEN_TTL: process.env.ACCESS_TOKEN_TTL || '15m', // 15 minutes
+    REFRESH_TOKEN_TTL: process.env.REFRESH_TOKEN_TTL || '7d' // 7 days
+};

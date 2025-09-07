@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { prisma } from '../../config/prisma';
+import { prisma } from '../../config/prisma.js';
 export async function attachmentRoutes(fastify) {
     const addBody = z.object({
         filePath: z.string().min(3),

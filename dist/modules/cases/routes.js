@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { prisma } from '../../config/prisma';
+import { prisma } from '../../config/prisma.js';
 export async function caseRoutes(fastify) {
     const listQuery = z.object({
         status: z.enum(['new', 'in_progress', 'waiting_on_parts', 'waiting_on_shop', 'resolved', 'closed', 'cancelled']).optional(),

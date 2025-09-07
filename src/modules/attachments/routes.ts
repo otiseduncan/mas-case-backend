@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../config/prisma'
+import { prisma } from '../../config/prisma.js'
 
 export async function attachmentRoutes(fastify: FastifyInstance) {
   const addBody = z.object({

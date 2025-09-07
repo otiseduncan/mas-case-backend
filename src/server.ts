@@ -3,15 +3,15 @@ import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
 import jwt from '@fastify/jwt'
 
-import { env } from './config/env'
-import { logger } from './config/logger'
-import { authPlugin } from './middlewares/auth'
+import { env } from './config/env.js'
+import { logger } from './config/logger.js'
+import { authPlugin } from './middlewares/auth.js'
 
-import { authRoutes } from './modules/auth/routes'
-import { caseRoutes } from './modules/cases/routes'
-import { noteRoutes } from './modules/notes/routes'
-import { attachmentRoutes } from './modules/attachments/routes'
-import { userRoutes } from './modules/users/routes'
+import { authRoutes } from './modules/auth/routes.js'
+import { caseRoutes } from './modules/cases/routes.js'
+import { noteRoutes } from './modules/notes/routes.js'
+import { attachmentRoutes } from './modules/attachments/routes.js'
+import { userRoutes } from './modules/users/routes.js'
 
 const app = Fastify({ logger: true })
 

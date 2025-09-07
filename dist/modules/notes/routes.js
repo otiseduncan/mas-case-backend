@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { prisma } from '../../config/prisma';
+import { prisma } from '../../config/prisma.js';
 export async function noteRoutes(fastify) {
     const addBody = z.object({
         body: z.string().min(1)

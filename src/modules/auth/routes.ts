@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import type { FastifyInstance } from 'fastify'
-import { prisma } from '../../config/prisma'
-import { comparePassword, hashPassword } from '../../utils/password'
-import { signAccessToken, issueRefreshToken, verifyRefreshToken, rotateRefreshToken, revokeRefreshToken } from '../../utils/token'
+import { prisma } from '../../config/prisma.js'
+import { comparePassword, hashPassword } from '../../utils/password.js'
+import { signAccessToken, issueRefreshToken, verifyRefreshToken, rotateRefreshToken, revokeRefreshToken } from '../../utils/token.js'
 
 export async function authRoutes(fastify: FastifyInstance) {
   const loginBody = z.object({
