@@ -2,13 +2,16 @@ FROM node:20-bookworm-slim
 
 WORKDIR /app
 
+# Install OpenSSL (required for Prisma)
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 # Copy everything up front (including tsconfig.json and src/)
 COPY . .
 
-# Install dependencies (this will also run postinstall if defined)
+# Install dependencies
 RUN npm install
 
-# Build explicitly (in case postinstall was skipped in some environments)
+# Build TypeScript
 RUN npm run build
 
 # Generate Prisma client
